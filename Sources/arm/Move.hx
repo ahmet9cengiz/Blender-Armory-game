@@ -15,6 +15,7 @@ class Move extends iron.Trait {
 			var directionOfMove;
 
 			if (keyboard.down("w")){
+				trace("move");
 				directionOfMove = object.transform.world.look().mult(-.5);
 				object.transform.loc.add(directionOfMove);
 			}
@@ -25,12 +26,12 @@ class Move extends iron.Trait {
 			}
 
 			if (keyboard.down("a")){
-				quat.fromEuler(0, 0, .05);
+				quat.fromEuler(0, 0, .03);
 				object.transform.rot.mult(quat);
 			}
 
 			if (keyboard.down("d")){
-				quat.fromEuler(0, 0, -.05);
+				quat.fromEuler(0, 0, -.03);
 				object.transform.rot.mult(quat);
 			}
 
