@@ -52,10 +52,10 @@
 -D kha_version=1810
 -D kha_project_name=myCharacter
 -js krom\krom.js.temp
-armory.trait.physics.bullet.RigidBody
---macro keep('armory.trait.physics.bullet.RigidBody')
 armory.trait.physics.bullet.PhysicsWorld
 --macro keep('armory.trait.physics.bullet.PhysicsWorld')
-armory.trait.FirstPersonController
---macro keep('armory.trait.FirstPersonController')
+armory.trait.physics.bullet.RigidBody
+--macro keep('armory.trait.physics.bullet.RigidBody')
+arm.node.Movement
+--macro keep('arm.node.Movement')
 -main Main

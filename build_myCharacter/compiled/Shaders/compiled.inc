@@ -18,6 +18,6 @@ const float ssaoRadius = 1.0;
 const float ssaoStrength = 1.0;
 const float ssaoScale = 20.0;
 const int compoChromaticType = 0;
-const int skinMaxBones = 8;
+const int skinMaxBones = 19;
 
 #endif // _COMPILED_GLSL_
