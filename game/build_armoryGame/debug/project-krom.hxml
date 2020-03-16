@@ -3,11 +3,14 @@
 -cp C:\Users\ahmet\Documents\Blender\game\Sources
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\armory\Sources
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\iron\Sources
+-cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\lib\haxebullet\Sources
 -cp E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/armory
 -cp E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/iron
+-cp E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/lib/haxebullet
 -D hxcpp_smart_strings
 -D E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/armory
 -D E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/iron
+-D E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/lib/haxebullet
 -D arm_deferred
 -D arm_csm
 -D arm_ltc
@@ -23,6 +26,8 @@
 -D rp_supersampling=1
 -D rp_ssgi=SSAO
 -D arm_audio
+-D arm_physics
+-D arm_bullet
 -D arm_noembed
 -D arm_soundcompress
 -D arm_skin
@@ -48,6 +53,12 @@
 -D kha_version=1810
 -D kha_project_name=armoryGame
 -js krom\krom.js.temp
-arm.node.CharacterNode
---macro keep('arm.node.CharacterNode')
+armory.trait.physics.bullet.RigidBody
+--macro keep('armory.trait.physics.bullet.RigidBody')
+arm.node.CharacterMovement
+--macro keep('arm.node.CharacterMovement')
+armory.trait.physics.bullet.PhysicsWorld
+--macro keep('armory.trait.physics.bullet.PhysicsWorld')
+arm.node.CharacterAnimation
+--macro keep('arm.node.CharacterAnimation')
 -main Main
