@@ -24,6 +24,7 @@ project.addAssets("../bakedTextures/baked_normal.png", { notinlist: true });
 project.addAssets("E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/armory/Assets/brdf.png", { notinlist: true });
 project.addAssets("E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/armory/Assets/smaa_area.png", { notinlist: true });
 project.addAssets("E:/SteamLibrary/steamapps/common/Blender/ArmorySDK/armory/Assets/smaa_search.png", { notinlist: true });
+project.addAssets("Images/grass.jpg", { notinlist: true });
 project.addDefine('arm_deferred');
 project.addDefine('arm_csm');
 project.addDefine('arm_ltc');

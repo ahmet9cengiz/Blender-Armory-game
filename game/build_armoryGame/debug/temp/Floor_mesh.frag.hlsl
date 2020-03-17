@@ -1,9 +1,14 @@
+Texture2D<float4> ImageTexture;
+SamplerState _ImageTexture_sampler;
+
 static float3 wnormal;
+static float2 texCoord;
 static float4 fragColor[2];
 
 struct SPIRV_Cross_Input
 {
-    float3 wnormal : TEXCOORD0;
+    float2 texCoord : TEXCOORD0;
+    float3 wnormal : TEXCOORD1;
 };
 
 struct SPIRV_Cross_Output
@@ -29,22 +34,26 @@ float packFloat2(float f1, float f2)
 void frag_main()
 {
     float3 n = normalize(wnormal);
-    float3 basecol = float3(0.074649274349212646484375f, 0.20791609585285186767578125f, 0.014311142265796661376953125f);
+    float4 ImageTexture_texread_store = ImageTexture.Sample(_ImageTexture_sampler, texCoord);
+    float3 _82 = pow(ImageTexture_texread_store.xyz, 2.2000000476837158203125f.xxx);
+    ImageTexture_texread_store = float4(_82.x, _82.y, _82.z, ImageTexture_texread_store.w);
+    float3 ImageTexture_Color_res = ImageTexture_texread_store.xyz;
+    float3 basecol = ImageTexture_Color_res;
     float roughness = 0.5f;
     float metallic = 0.0f;
     float occlusion = 1.0f;
     float specular = 0.5f;
     n /= ((abs(n.x) + abs(n.y)) + abs(n.z)).xxx;
-    float2 _96;
+    float2 _115;
     if (n.z >= 0.0f)
     {
-        _96 = n.xy;
+        _115 = n.xy;
     }
     else
     {
-        _96 = octahedronWrap(n.xy);
+        _115 = octahedronWrap(n.xy);
     }
-    n = float3(_96.x, _96.y, n.z);
+    n = float3(_115.x, _115.y, n.z);
     fragColor[0] = float4(n.xy, roughness, packFloatInt16(metallic, 0u));
     fragColor[1] = float4(basecol, packFloat2(occlusion, specular));
 }
@@ -52,6 +61,7 @@ void frag_main()
 SPIRV_Cross_Output main(SPIRV_Cross_Input stage_input)
 {
     wnormal = stage_input.wnormal;
+    texCoord = stage_input.texCoord;
     frag_main();
     SPIRV_Cross_Output stage_output;
     stage_output.fragColor = fragColor;
