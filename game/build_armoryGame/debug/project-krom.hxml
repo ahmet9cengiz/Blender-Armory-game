@@ -53,12 +53,12 @@
 -D kha_version=1810
 -D kha_project_name=armoryGame
 -js krom\krom.js.temp
-armory.trait.physics.bullet.RigidBody
---macro keep('armory.trait.physics.bullet.RigidBody')
-arm.node.CharacterMovement
---macro keep('arm.node.CharacterMovement')
-armory.trait.physics.bullet.PhysicsWorld
---macro keep('armory.trait.physics.bullet.PhysicsWorld')
 arm.node.CharacterAnimation
 --macro keep('arm.node.CharacterAnimation')
+armory.trait.physics.bullet.RigidBody
+--macro keep('armory.trait.physics.bullet.RigidBody')
+armory.trait.physics.bullet.PhysicsWorld
+--macro keep('armory.trait.physics.bullet.PhysicsWorld')
+arm.node.CharacterMovement
+--macro keep('arm.node.CharacterMovement')
 -main Main

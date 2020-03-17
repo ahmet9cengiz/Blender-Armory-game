@@ -1,6 +1,27 @@
 {
 	"files": [
 		{
+			"name": "Alpha_Body_MAT_002_mesh_frag",
+			"files": [
+				"Alpha_Body_MAT_002_mesh.frag.d3d11"
+			],
+			"type": "shader",
+			"inputs": [
+				{
+					"name": "wnormal",
+					"type": "vec3"
+				}
+			],
+			"outputs": [
+				{
+					"name": "fragColor",
+					"type": "vec4[]"
+				}
+			],
+			"uniforms": [],
+			"types": []
+		},
+		{
 			"name": "Alpha_Body_MAT_armskin_mesh_frag",
 			"files": [
 				"Alpha_Body_MAT_armskin_mesh.frag.d3d11"
@@ -102,17 +123,6 @@
 			]
 		},
 		{
-			"name": "Alpha_Body_MAT_armskin_shadowmap_frag",
-			"files": [
-				"Alpha_Body_MAT_armskin_shadowmap.frag.d3d11"
-			],
-			"type": "shader",
-			"inputs": [],
-			"outputs": [],
-			"uniforms": [],
-			"types": []
-		},
-		{
 			"name": "Alpha_Body_MAT_armskin_shadowmap_vert",
 			"files": [
 				"Alpha_Body_MAT_armskin_shadowmap.vert.d3d11"
@@ -180,9 +190,72 @@
 			]
 		},
 		{
+			"name": "Alpha_Body_MAT_mesh_frag",
+			"files": [
+				"Alpha_Body_MAT_mesh.frag.d3d11"
+			],
+			"type": "shader",
+			"inputs": [
+				{
+					"name": "wnormal",
+					"type": "vec3"
+				}
+			],
+			"outputs": [
+				{
+					"name": "fragColor",
+					"type": "vec4[]"
+				}
+			],
+			"uniforms": [],
+			"types": []
+		},
+		{
+			"name": "Alpha_Joints_MAT_002_mesh_frag",
+			"files": [
+				"Alpha_Joints_MAT_002_mesh.frag.d3d11"
+			],
+			"type": "shader",
+			"inputs": [
+				{
+					"name": "wnormal",
+					"type": "vec3"
+				}
+			],
+			"outputs": [
+				{
+					"name": "fragColor",
+					"type": "vec4[]"
+				}
+			],
+			"uniforms": [],
+			"types": []
+		},
+		{
 			"name": "Alpha_Joints_MAT_armskin_mesh_frag",
 			"files": [
 				"Alpha_Joints_MAT_armskin_mesh.frag.d3d11"
+			],
+			"type": "shader",
+			"inputs": [
+				{
+					"name": "wnormal",
+					"type": "vec3"
+				}
+			],
+			"outputs": [
+				{
+					"name": "fragColor",
+					"type": "vec4[]"
+				}
+			],
+			"uniforms": [],
+			"types": []
+		},
+		{
+			"name": "Alpha_Joints_MAT_mesh_frag",
+			"files": [
+				"Alpha_Joints_MAT_mesh.frag.d3d11"
 			],
 			"type": "shader",
 			"inputs": [
@@ -220,132 +293,6 @@
 			],
 			"uniforms": [],
 			"types": []
-		},
-		{
-			"name": "Floor_mesh_vert",
-			"files": [
-				"Floor_mesh.vert.d3d11"
-			],
-			"type": "shader",
-			"inputs": [
-				{
-					"name": "pos",
-					"type": "vec4"
-				},
-				{
-					"name": "nor",
-					"type": "vec2"
-				},
-				{
-					"name": "gl_VertexID",
-					"type": "int"
-				},
-				{
-					"name": "gl_InstanceID",
-					"type": "int"
-				}
-			],
-			"outputs": [
-				{
-					"name": "wnormal",
-					"type": "vec3"
-				}
-			],
-			"uniforms": [
-				{
-					"name": "N",
-					"type": "mat3"
-				},
-				{
-					"name": "WVP",
-					"type": "mat4"
-				}
-			],
-			"types": [
-				{
-					"name": "gl_PerVertex",
-					"members": [
-						{
-							"type": "vec4",
-							"name": "gl_Position"
-						},
-						{
-							"type": "float",
-							"name": "gl_PointSize"
-						},
-						{
-							"type": "float[]",
-							"name": "gl_ClipDistance"
-						},
-						{
-							"type": "float[]",
-							"name": "gl_CullDistance"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Floor_shadowmap_frag",
-			"files": [
-				"Floor_shadowmap.frag.d3d11"
-			],
-			"type": "shader",
-			"inputs": [],
-			"outputs": [],
-			"uniforms": [],
-			"types": []
-		},
-		{
-			"name": "Floor_shadowmap_vert",
-			"files": [
-				"Floor_shadowmap.vert.d3d11"
-			],
-			"type": "shader",
-			"inputs": [
-				{
-					"name": "pos",
-					"type": "vec4"
-				},
-				{
-					"name": "gl_VertexID",
-					"type": "int"
-				},
-				{
-					"name": "gl_InstanceID",
-					"type": "int"
-				}
-			],
-			"outputs": [],
-			"uniforms": [
-				{
-					"name": "LWVP",
-					"type": "mat4"
-				}
-			],
-			"types": [
-				{
-					"name": "gl_PerVertex",
-					"members": [
-						{
-							"type": "vec4",
-							"name": "gl_Position"
-						},
-						{
-							"type": "float",
-							"name": "gl_PointSize"
-						},
-						{
-							"type": "float[]",
-							"name": "gl_ClipDistance"
-						},
-						{
-							"type": "float[]",
-							"name": "gl_CullDistance"
-						}
-					]
-				}
-			]
 		},
 		{
 			"name": "armdefault_mesh_frag",
@@ -581,6 +528,116 @@
 				}
 			],
 			"uniforms": [],
+			"types": [
+				{
+					"name": "gl_PerVertex",
+					"members": [
+						{
+							"type": "vec4",
+							"name": "gl_Position"
+						},
+						{
+							"type": "float",
+							"name": "gl_PointSize"
+						},
+						{
+							"type": "float[]",
+							"name": "gl_ClipDistance"
+						},
+						{
+							"type": "float[]",
+							"name": "gl_CullDistance"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "corona_mesh_frag",
+			"files": [
+				"corona_mesh.frag.d3d11"
+			],
+			"type": "shader",
+			"inputs": [
+				{
+					"name": "wnormal",
+					"type": "vec3"
+				},
+				{
+					"name": "texCoord",
+					"type": "vec2"
+				}
+			],
+			"outputs": [
+				{
+					"name": "fragColor",
+					"type": "vec4[]"
+				}
+			],
+			"uniforms": [
+				{
+					"name": "ImageTexture",
+					"type": "sampler2D"
+				},
+				{
+					"name": "ImageTexture_001",
+					"type": "sampler2D"
+				}
+			],
+			"types": []
+		},
+		{
+			"name": "corona_mesh_vert",
+			"files": [
+				"corona_mesh.vert.d3d11"
+			],
+			"type": "shader",
+			"inputs": [
+				{
+					"name": "pos",
+					"type": "vec4"
+				},
+				{
+					"name": "tex",
+					"type": "vec2"
+				},
+				{
+					"name": "nor",
+					"type": "vec2"
+				},
+				{
+					"name": "gl_VertexID",
+					"type": "int"
+				},
+				{
+					"name": "gl_InstanceID",
+					"type": "int"
+				}
+			],
+			"outputs": [
+				{
+					"name": "texCoord",
+					"type": "vec2"
+				},
+				{
+					"name": "wnormal",
+					"type": "vec3"
+				}
+			],
+			"uniforms": [
+				{
+					"name": "texUnpack",
+					"type": "float"
+				},
+				{
+					"name": "N",
+					"type": "mat3"
+				},
+				{
+					"name": "WVP",
+					"type": "mat4"
+				}
+			],
 			"types": [
 				{
 					"name": "gl_PerVertex",
