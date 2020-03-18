@@ -1,6 +1,6 @@
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\Kha\Sources
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\Kha\Backends\Krom
--cp C:\Users\ahmet\Documents\Blender\game\Sources
+-cp C:\Users\ahmet\Documents\Blender-Armory-game\game\Sources
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\armory\Sources
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\iron\Sources
 -cp E:\SteamLibrary\steamapps\common\Blender\ArmorySDK\lib\haxebullet\Sources
@@ -52,14 +52,14 @@
 -D kha_version=1810
 -D kha_project_name=armoryGame
 -js krom\krom.js.temp
-armory.trait.physics.bullet.PhysicsWorld
---macro keep('armory.trait.physics.bullet.PhysicsWorld')
+arm.node.CharacterMovement
+--macro keep('arm.node.CharacterMovement')
+arm.AnimationHaxe
+--macro keep('arm.AnimationHaxe')
 arm.node.Corona
 --macro keep('arm.node.Corona')
 armory.trait.physics.bullet.RigidBody
 --macro keep('armory.trait.physics.bullet.RigidBody')
-arm.AnimationHaxe
---macro keep('arm.AnimationHaxe')
-arm.node.CharacterMovement
---macro keep('arm.node.CharacterMovement')
+armory.trait.physics.bullet.PhysicsWorld
+--macro keep('armory.trait.physics.bullet.PhysicsWorld')
 -main Main

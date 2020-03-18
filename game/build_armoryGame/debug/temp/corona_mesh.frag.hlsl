@@ -1,7 +1,7 @@
-Texture2D<float4> ImageTexture;
-SamplerState _ImageTexture_sampler;
 Texture2D<float4> ImageTexture_001;
 SamplerState _ImageTexture_001_sampler;
+Texture2D<float4> ImageTexture_002;
+SamplerState _ImageTexture_002_sampler;
 
 static float3 wnormal;
 static float2 texCoord;
@@ -36,16 +36,16 @@ float packFloat2(float f1, float f2)
 void frag_main()
 {
     float3 n = normalize(wnormal);
-    float4 ImageTexture_texread_store = ImageTexture.Sample(_ImageTexture_sampler, texCoord);
-    float3 _82 = pow(ImageTexture_texread_store.xyz, 2.2000000476837158203125f.xxx);
-    ImageTexture_texread_store = float4(_82.x, _82.y, _82.z, ImageTexture_texread_store.w);
     float4 ImageTexture_001_texread_store = ImageTexture_001.Sample(_ImageTexture_001_sampler, texCoord);
-    float3 _92 = pow(ImageTexture_001_texread_store.xyz, 2.2000000476837158203125f.xxx);
-    ImageTexture_001_texread_store = float4(_92.x, _92.y, _92.z, ImageTexture_001_texread_store.w);
-    float3 ImageTexture_Color_res = ImageTexture_texread_store.xyz;
-    n = ImageTexture_Color_res;
+    float3 _82 = pow(ImageTexture_001_texread_store.xyz, 2.2000000476837158203125f.xxx);
+    ImageTexture_001_texread_store = float4(_82.x, _82.y, _82.z, ImageTexture_001_texread_store.w);
+    float4 ImageTexture_002_texread_store = ImageTexture_002.Sample(_ImageTexture_002_sampler, texCoord);
+    float3 _92 = pow(ImageTexture_002_texread_store.xyz, 2.2000000476837158203125f.xxx);
+    ImageTexture_002_texread_store = float4(_92.x, _92.y, _92.z, ImageTexture_002_texread_store.w);
     float3 ImageTexture_001_Color_res = ImageTexture_001_texread_store.xyz;
-    float3 basecol = ImageTexture_001_Color_res;
+    n = ImageTexture_001_Color_res;
+    float3 ImageTexture_002_Color_res = ImageTexture_002_texread_store.xyz;
+    float3 basecol = ImageTexture_002_Color_res;
     float roughness = 0.4000000059604644775390625f;
     float metallic = 0.0f;
     float occlusion = 1.0f;
