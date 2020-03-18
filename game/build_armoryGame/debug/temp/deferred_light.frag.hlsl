@@ -1,17 +1,4 @@
-Texture2D<float4> sltcMat;
-SamplerState _sltcMat_sampler;
-uniform float3 lightArea0;
-uniform float3 lightArea1;
-uniform float3 lightArea2;
-uniform float3 lightArea3;
-Texture2D<float4> sltcMag;
-SamplerState _sltcMag_sampler;
-uniform float4x4 LWVPSpot0;
-Texture2D<float4> shadowMapSpot[1];
-SamplerComparisonState _shadowMapSpot_sampler[1];
-TextureCube<float4> shadowMapPoint[1];
-SamplerComparisonState _shadowMapPoint_sampler[1];
-uniform float2 lightProj;
+uniform float4 casData[20];
 uniform float4 shirr[7];
 Texture2D<float4> gbuffer0;
 SamplerState _gbuffer0_sampler;
@@ -26,10 +13,11 @@ uniform float3 backgroundCol;
 uniform float envmapStrength;
 Texture2D<float4> ssaotex;
 SamplerState _ssaotex_sampler;
-uniform float3 pointPos;
-uniform float3 pointCol;
-uniform float pointBias;
-uniform float4 casData[20];
+uniform float3 sunDir;
+Texture2D<float4> shadowMap;
+SamplerComparisonState _shadowMap_sampler;
+uniform float shadowsBias;
+uniform float3 sunCol;
 
 static float2 texCoord;
 static float3 viewRay;
@@ -45,12 +33,6 @@ struct SPIRV_Cross_Output
 {
     float4 fragColor : SV_Target0;
 };
-
-static float3 L0;
-static float3 L1;
-static float3 L2;
-static float3 L3;
-static float3 L4;
 
 float2 octahedronWrap(float2 v)
 {
@@ -100,345 +82,110 @@ float3 shIrradiance(float3 nor)
     return ((((((((((cl22 * 0.429042994976043701171875f) * ((nor.y * nor.y) - ((-nor.z) * (-nor.z)))) + (((cl20 * 0.743125021457672119140625f) * nor.x) * nor.x)) + (cl00 * 0.88622701168060302734375f)) - (cl20 * 0.2477079927921295166015625f)) + (((cl2m2 * 0.85808598995208740234375f) * nor.y) * (-nor.z))) + (((cl21 * 0.85808598995208740234375f) * nor.y) * nor.x)) + (((cl2m1 * 0.85808598995208740234375f) * (-nor.z)) * nor.x)) + ((cl11 * 1.02332794666290283203125f) * nor.y)) + ((cl1m1 * 1.02332794666290283203125f) * (-nor.z))) + ((cl10 * 1.02332794666290283203125f) * nor.x);
 }
 
-int clipQuadToHorizon()
+float3 lambertDiffuseBRDF(float3 albedo, float nl)
 {
-    int n = 0;
-    int config = 0;
-    if (L0.z > 0.0f)
-    {
-        config++;
-    }
-    if (L1.z > 0.0f)
-    {
-        config += 2;
-    }
-    if (L2.z > 0.0f)
-    {
-        config += 4;
-    }
-    if (L3.z > 0.0f)
-    {
-        config += 8;
-    }
-    if (config == 0)
-    {
-    }
-    else
-    {
-        if (config == 1)
-        {
-            n = 3;
-            L1 = (L0 * (-L1.z)) + (L1 * L0.z);
-            L2 = (L0 * (-L3.z)) + (L3 * L0.z);
-        }
-        else
-        {
-            if (config == 2)
-            {
-                n = 3;
-                L0 = (L1 * (-L0.z)) + (L0 * L1.z);
-                L2 = (L1 * (-L2.z)) + (L2 * L1.z);
-            }
-            else
-            {
-                if (config == 3)
-                {
-                    n = 4;
-                    L2 = (L1 * (-L2.z)) + (L2 * L1.z);
-                    L3 = (L0 * (-L3.z)) + (L3 * L0.z);
-                }
-                else
-                {
-                    if (config == 4)
-                    {
-                        n = 3;
-                        L0 = (L2 * (-L3.z)) + (L3 * L2.z);
-                        L1 = (L2 * (-L1.z)) + (L1 * L2.z);
-                    }
-                    else
-                    {
-                        if (config == 5)
-                        {
-                            n = 0;
-                        }
-                        else
-                        {
-                            if (config == 6)
-                            {
-                                n = 4;
-                                L0 = (L1 * (-L0.z)) + (L0 * L1.z);
-                                L3 = (L2 * (-L3.z)) + (L3 * L2.z);
-                            }
-                            else
-                            {
-                                if (config == 7)
-                                {
-                                    n = 5;
-                                    L4 = (L0 * (-L3.z)) + (L3 * L0.z);
-                                    L3 = (L2 * (-L3.z)) + (L3 * L2.z);
-                                }
-                                else
-                                {
-                                    if (config == 8)
-                                    {
-                                        n = 3;
-                                        L0 = (L3 * (-L0.z)) + (L0 * L3.z);
-                                        L1 = (L3 * (-L2.z)) + (L2 * L3.z);
-                                        L2 = L3;
-                                    }
-                                    else
-                                    {
-                                        if (config == 9)
-                                        {
-                                            n = 4;
-                                            L1 = (L0 * (-L1.z)) + (L1 * L0.z);
-                                            L2 = (L3 * (-L2.z)) + (L2 * L3.z);
-                                        }
-                                        else
-                                        {
-                                            if (config == 10)
-                                            {
-                                                n = 0;
-                                            }
-                                            else
-                                            {
-                                                if (config == 11)
-                                                {
-                                                    n = 5;
-                                                    L4 = L3;
-                                                    L3 = (L3 * (-L2.z)) + (L2 * L3.z);
-                                                    L2 = (L1 * (-L2.z)) + (L2 * L1.z);
-                                                }
-                                                else
-                                                {
-                                                    if (config == 12)
-                                                    {
-                                                        n = 4;
-                                                        L1 = (L2 * (-L1.z)) + (L1 * L2.z);
-                                                        L0 = (L3 * (-L0.z)) + (L0 * L3.z);
-                                                    }
-                                                    else
-                                                    {
-                                                        if (config == 13)
-                                                        {
-                                                            n = 5;
-                                                            L4 = L3;
-                                                            L3 = L2;
-                                                            L2 = (L2 * (-L1.z)) + (L1 * L2.z);
-                                                            L1 = (L0 * (-L1.z)) + (L1 * L0.z);
-                                                        }
-                                                        else
-                                                        {
-                                                            if (config == 14)
-                                                            {
-                                                                n = 5;
-                                                                L4 = (L3 * (-L0.z)) + (L0 * L3.z);
-                                                                L0 = (L1 * (-L0.z)) + (L0 * L1.z);
-                                                            }
-                                                            else
-                                                            {
-                                                                if (config == 15)
-                                                                {
-                                                                    n = 4;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    if (n == 3)
-    {
-        L3 = L0;
-    }
-    if (n == 4)
-    {
-        L4 = L0;
-    }
-    return n;
+    return albedo * max(0.0f, nl);
 }
 
-float integrateEdge(float3 v1, float3 v2)
+float d_ggx(float nh, float a)
 {
-    float cosTheta = dot(v1, v2);
-    float theta = acos(cosTheta);
-    float3 _496 = v1;
-    float3 _497 = v2;
-    float _502;
-    if (theta > 0.001000000047497451305389404296875f)
-    {
-        _502 = theta / sin(theta);
-    }
-    else
-    {
-        _502 = 1.0f;
-    }
-    float res = cross(_496, _497).z * _502;
-    return res;
+    float a2 = a * a;
+    float denom = pow(((nh * nh) * (a2 - 1.0f)) + 1.0f, 2.0f);
+    return (a2 * 0.3183098733425140380859375f) / denom;
 }
 
-float ltcEvaluate(float3 N, float3 V, float dotNV, float3 P, inout float3x3 Minv, float3 points0, float3 points1, float3 points2, float3 points3)
+float v_smithschlick(float nl, float nv, float a)
 {
-    float3 T1 = normalize(V - (N * dotNV));
-    float3 T2 = cross(N, T1);
-    Minv = mul(transpose(float3x3(float3(T1), float3(T2), float3(N))), Minv);
-    L0 = mul(points0 - P, Minv);
-    L1 = mul(points1 - P, Minv);
-    L2 = mul(points2 - P, Minv);
-    L3 = mul(points3 - P, Minv);
-    L4 = 0.0f.xxx;
-    int _955 = clipQuadToHorizon();
-    int n = _955;
-    if (n == 0)
-    {
-        return 0.0f;
-    }
-    L0 = normalize(L0);
-    L1 = normalize(L1);
-    L2 = normalize(L2);
-    L3 = normalize(L3);
-    L4 = normalize(L4);
-    float sum = 0.0f;
-    float3 param = L0;
-    float3 param_1 = L1;
-    sum += integrateEdge(param, param_1);
-    float3 param_2 = L1;
-    float3 param_3 = L2;
-    sum += integrateEdge(param_2, param_3);
-    float3 param_4 = L2;
-    float3 param_5 = L3;
-    sum += integrateEdge(param_4, param_5);
-    if (n >= 4)
-    {
-        float3 param_6 = L3;
-        float3 param_7 = L4;
-        sum += integrateEdge(param_6, param_7);
-    }
-    if (n == 5)
-    {
-        float3 param_8 = L4;
-        float3 param_9 = L0;
-        sum += integrateEdge(param_8, param_9);
-    }
-    return max(0.0f, -sum);
+    return 1.0f / (((nl * (1.0f - a)) + a) * ((nv * (1.0f - a)) + a));
 }
 
-float attenuate(float dist)
+float3 f_schlick(float3 f0, float vh)
 {
-    return 1.0f / (dist * dist);
+    return f0 + ((1.0f.xxx - f0) * exp2((((-5.554729938507080078125f) * vh) - 6.9831600189208984375f) * vh));
 }
 
-float PCF(Texture2D<float4> shadowMap, SamplerComparisonState _shadowMap_sampler, float2 uv, float compare, float2 smSize)
+float3 specularBRDF(float3 f0, float roughness, float nl, float nh, float nv, float vh)
 {
-    float3 _206 = float3(uv + ((-1.0f).xx / smSize), compare);
-    float result = shadowMap.SampleCmp(_shadowMap_sampler, _206.xy, _206.z);
-    float3 _215 = float3(uv + (float2(-1.0f, 0.0f) / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _215.xy, _215.z);
-    float3 _226 = float3(uv + (float2(-1.0f, 1.0f) / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _226.xy, _226.z);
-    float3 _237 = float3(uv + (float2(0.0f, -1.0f) / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _237.xy, _237.z);
-    float3 _245 = float3(uv, compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _245.xy, _245.z);
-    float3 _256 = float3(uv + (float2(0.0f, 1.0f) / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _256.xy, _256.z);
-    float3 _267 = float3(uv + (float2(1.0f, -1.0f) / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _267.xy, _267.z);
-    float3 _278 = float3(uv + (float2(1.0f, 0.0f) / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _278.xy, _278.z);
-    float3 _289 = float3(uv + (1.0f.xx / smSize), compare);
-    result += shadowMap.SampleCmp(_shadowMap_sampler, _289.xy, _289.z);
+    float a = roughness * roughness;
+    return (f_schlick(f0, vh) * (d_ggx(nh, a) * clamp(v_smithschlick(nl, nv, a), 0.0f, 1.0f))) / 4.0f.xxx;
+}
+
+float4x4 getCascadeMat(float d, inout int casi, inout int casIndex)
+{
+    float4 comp = float4(float(d > casData[16].x), float(d > casData[16].y), float(d > casData[16].z), float(d > casData[16].w));
+    casi = int(min(dot(1.0f.xxxx, comp), 4.0f));
+    casIndex = casi * 4;
+    return float4x4(float4(casData[casIndex]), float4(casData[casIndex + 1]), float4(casData[casIndex + 2]), float4(casData[casIndex + 3]));
+}
+
+float PCF(Texture2D<float4> shadowMap_1, SamplerComparisonState _shadowMap_1_sampler, float2 uv, float compare, float2 smSize)
+{
+    float3 _239 = float3(uv + ((-1.0f).xx / smSize), compare);
+    float result = shadowMap_1.SampleCmp(_shadowMap_1_sampler, _239.xy, _239.z);
+    float3 _248 = float3(uv + (float2(-1.0f, 0.0f) / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _248.xy, _248.z);
+    float3 _259 = float3(uv + (float2(-1.0f, 1.0f) / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _259.xy, _259.z);
+    float3 _270 = float3(uv + (float2(0.0f, -1.0f) / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _270.xy, _270.z);
+    float3 _278 = float3(uv, compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _278.xy, _278.z);
+    float3 _289 = float3(uv + (float2(0.0f, 1.0f) / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _289.xy, _289.z);
+    float3 _300 = float3(uv + (float2(1.0f, -1.0f) / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _300.xy, _300.z);
+    float3 _311 = float3(uv + (float2(1.0f, 0.0f) / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _311.xy, _311.z);
+    float3 _322 = float3(uv + (1.0f.xx / smSize), compare);
+    result += shadowMap_1.SampleCmp(_shadowMap_1_sampler, _322.xy, _322.z);
     return result / 9.0f;
 }
 
-float shadowTest(Texture2D<float4> shadowMap, SamplerComparisonState _shadowMap_sampler, float3 lPos, float shadowsBias)
+float shadowTestCascade(Texture2D<float4> shadowMap_1, SamplerComparisonState _shadowMap_1_sampler, float3 eye_1, float3 p, float shadowsBias_1)
 {
-    bool _458 = lPos.x < 0.0f;
-    bool _464;
-    if (!_458)
+    float d = distance(eye_1, p);
+    int param;
+    int param_1;
+    float4x4 _418 = getCascadeMat(d, param, param_1);
+    int casi = param;
+    int casIndex = param_1;
+    float4x4 LWVP = _418;
+    float4 lPos = mul(float4(p, 1.0f), LWVP);
+    float3 _433 = lPos.xyz / lPos.w.xxx;
+    lPos = float4(_433.x, _433.y, _433.z, lPos.w);
+    float visibility = 1.0f;
+    if (lPos.w > 0.0f)
     {
-        _464 = lPos.y < 0.0f;
+        visibility = PCF(shadowMap_1, _shadowMap_1_sampler, lPos.xy, lPos.z - shadowsBias_1, float2(4096.0f, 1024.0f));
+    }
+    float nextSplit = casData[16][casi];
+    float _459;
+    if (casi == 0)
+    {
+        _459 = nextSplit;
     }
     else
     {
-        _464 = _458;
+        _459 = nextSplit - (casData[16][casi - 1]);
     }
-    bool _470;
-    if (!_464)
+    float splitSize = _459;
+    float splitDist = (nextSplit - d) / splitSize;
+    if ((splitDist <= 0.1500000059604644775390625f) && (casi != 3))
     {
-        _470 = lPos.x > 1.0f;
+        int casIndex2 = casIndex + 4;
+        float4x4 LWVP2 = float4x4(float4(casData[casIndex2]), float4(casData[casIndex2 + 1]), float4(casData[casIndex2 + 2]), float4(casData[casIndex2 + 3]));
+        float4 lPos2 = mul(float4(p, 1.0f), LWVP2);
+        float3 _537 = lPos2.xyz / lPos2.w.xxx;
+        lPos2 = float4(_537.x, _537.y, _537.z, lPos2.w);
+        float visibility2 = 1.0f;
+        if (lPos2.w > 0.0f)
+        {
+            visibility2 = PCF(shadowMap_1, _shadowMap_1_sampler, lPos2.xy, lPos2.z - shadowsBias_1, float2(4096.0f, 1024.0f));
+        }
+        float lerpAmt = smoothstep(0.0f, 0.1500000059604644775390625f, splitDist);
+        return lerp(visibility2, visibility, lerpAmt);
     }
-    else
-    {
-        _470 = _464;
-    }
-    bool _476;
-    if (!_470)
-    {
-        _476 = lPos.y > 1.0f;
-    }
-    else
-    {
-        _476 = _470;
-    }
-    if (_476)
-    {
-        return 1.0f;
-    }
-    return PCF(shadowMap, _shadowMap_sampler, lPos.xy, lPos.z - shadowsBias, 1024.0f.xx);
-}
-
-float3 sampleLight(float3 p, float3 n, float3 v, float dotNV, float3 lp, float3 lightCol, float3 albedo, float rough, float spec, float3 f0, int index, float bias)
-{
-    float3 ld = lp - p;
-    float3 l = normalize(ld);
-    float3 h = normalize(v + l);
-    float dotNH = dot(n, h);
-    float dotVH = dot(v, h);
-    float dotNL = dot(n, l);
-    float theta = acos(dotNV);
-    float2 tuv = float2(rough, theta / 1.57079637050628662109375f);
-    tuv = (tuv * 0.984375f) + 0.0078125f.xx;
-    float4 t = sltcMat.SampleLevel(_sltcMat_sampler, tuv, 0.0f);
-    float3x3 invM = float3x3(float3(float3(1.0f, 0.0f, t.y)), float3(float3(0.0f, t.z, 0.0f)), float3(float3(t.w, 0.0f, t.x)));
-    float3 param = n;
-    float3 param_1 = v;
-    float param_2 = dotNV;
-    float3 param_3 = p;
-    float3x3 param_4 = invM;
-    float3 param_5 = lightArea0;
-    float3 param_6 = lightArea1;
-    float3 param_7 = lightArea2;
-    float3 param_8 = lightArea3;
-    float _1107 = ltcEvaluate(param, param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
-    float ltcspec = _1107;
-    ltcspec *= sltcMag.SampleLevel(_sltcMag_sampler, tuv, 0.0f).w;
-    float3 param_9 = n;
-    float3 param_10 = v;
-    float param_11 = dotNV;
-    float3 param_12 = p;
-    float3x3 param_13 = float3x3(float3(1.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(0.0f, 0.0f, 1.0f));
-    float3 param_14 = lightArea0;
-    float3 param_15 = lightArea1;
-    float3 param_16 = lightArea2;
-    float3 param_17 = lightArea3;
-    float _1133 = ltcEvaluate(param_9, param_10, param_11, param_12, param_13, param_14, param_15, param_16, param_17);
-    float ltcdiff = _1133;
-    float3 direct = (albedo * ltcdiff) + ((ltcspec * spec) * 0.0500000007450580596923828125f).xxx;
-    direct *= attenuate(distance(p, lp));
-    direct *= lightCol;
-    float4 lPos = mul(float4(p + ((n * bias) * 10.0f), 1.0f), LWVPSpot0);
-    direct *= shadowTest(shadowMapSpot[0], _shadowMapSpot_sampler[0], lPos.xyz / lPos.w.xxx, bias);
-    return direct;
+    return visibility;
 }
 
 void frag_main()
@@ -446,16 +193,16 @@ void frag_main()
     float4 g0 = gbuffer0.SampleLevel(_gbuffer0_sampler, texCoord, 0.0f);
     float3 n;
     n.z = (1.0f - abs(g0.x)) - abs(g0.y);
-    float2 _1367;
+    float2 _737;
     if (n.z >= 0.0f)
     {
-        _1367 = g0.xy;
+        _737 = g0.xy;
     }
     else
     {
-        _1367 = octahedronWrap(g0.xy);
+        _737 = octahedronWrap(g0.xy);
     }
-    n = float3(_1367.x, _1367.y, n.z);
+    n = float3(_737.x, _737.y, n.z);
     n = normalize(n);
     float roughness = g0.z;
     float param;
@@ -476,13 +223,17 @@ void frag_main()
     envl += (backgroundCol * surfaceF0(g1.xyz, metallic));
     envl *= (envmapStrength * occspec.x);
     fragColor = float4(envl.x, envl.y, envl.z, fragColor.w);
-    float3 _1478 = fragColor.xyz * ssaotex.SampleLevel(_ssaotex_sampler, texCoord, 0.0f).x;
-    fragColor = float4(_1478.x, _1478.y, _1478.z, fragColor.w);
-    int param_2 = 0;
-    float param_3 = pointBias;
-    float3 _1498 = sampleLight(p, n, v, dotNV, pointPos, pointCol, albedo, roughness, occspec.y, f0, param_2, param_3);
-    float3 _1501 = fragColor.xyz + _1498;
-    fragColor = float4(_1501.x, _1501.y, _1501.z, fragColor.w);
+    float3 _849 = fragColor.xyz * ssaotex.SampleLevel(_ssaotex_sampler, texCoord, 0.0f).x;
+    fragColor = float4(_849.x, _849.y, _849.z, fragColor.w);
+    float3 sh = normalize(v + sunDir);
+    float sdotNH = dot(n, sh);
+    float sdotVH = dot(v, sh);
+    float sdotNL = dot(n, sunDir);
+    float svisibility = 1.0f;
+    float3 sdirect = lambertDiffuseBRDF(albedo, sdotNL) + (specularBRDF(f0, roughness, sdotNL, sdotNH, dotNV, sdotVH) * occspec.y);
+    svisibility = shadowTestCascade(shadowMap, _shadowMap_sampler, eye, p + ((n * shadowsBias) * 10.0f), shadowsBias);
+    float3 _906 = fragColor.xyz + ((sdirect * svisibility) * sunCol);
+    fragColor = float4(_906.x, _906.y, _906.z, fragColor.w);
     fragColor.w = 1.0f;
 }
 

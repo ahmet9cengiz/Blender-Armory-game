@@ -21,7 +21,7 @@ package arm.node;
 		_OnKeyboard.addOutputs([_TranslateObject]);
 		_TranslateObject.addInput(_OnKeyboard, 0);
 		_TranslateObject.addInput(new armory.logicnode.ObjectNode(this, ""), 0);
-		_TranslateObject.addInput(new armory.logicnode.VectorNode(this, 0.0, 0.15000000596046448, 0.0), 0);
+		_TranslateObject.addInput(new armory.logicnode.VectorNode(this, 0.0, 0.30000001192092896, 0.0), 0);
 		_TranslateObject.addInput(new armory.logicnode.BooleanNode(this, true), 0);
 		_TranslateObject.addOutputs([new armory.logicnode.NullNode(this)]);
 		var _RotateObjectAroundAxis = new armory.logicnode.RotateObjectAroundAxisNode(this);
@@ -32,7 +32,7 @@ package arm.node;
 		_RotateObjectAroundAxis.addInput(_OnKeyboard_002, 0);
 		_RotateObjectAroundAxis.addInput(new armory.logicnode.ObjectNode(this, ""), 0);
 		_RotateObjectAroundAxis.addInput(new armory.logicnode.VectorNode(this, 0.0, 0.0, 1.0), 0);
-		_RotateObjectAroundAxis.addInput(new armory.logicnode.FloatNode(this, 0.05000000074505806), 0);
+		_RotateObjectAroundAxis.addInput(new armory.logicnode.FloatNode(this, 0.019999999552965164), 0);
 		_RotateObjectAroundAxis.addOutputs([new armory.logicnode.NullNode(this)]);
 		var _RotateObjectAroundAxis_001 = new armory.logicnode.RotateObjectAroundAxisNode(this);
 		var _OnKeyboard_003 = new armory.logicnode.OnKeyboardNode(this);
@@ -42,7 +42,7 @@ package arm.node;
 		_RotateObjectAroundAxis_001.addInput(_OnKeyboard_003, 0);
 		_RotateObjectAroundAxis_001.addInput(new armory.logicnode.ObjectNode(this, ""), 0);
 		_RotateObjectAroundAxis_001.addInput(new armory.logicnode.VectorNode(this, 0.0, 0.0, 1.0), 0);
-		_RotateObjectAroundAxis_001.addInput(new armory.logicnode.FloatNode(this, -0.05000000074505806), 0);
+		_RotateObjectAroundAxis_001.addInput(new armory.logicnode.FloatNode(this, -0.019999999552965164), 0);
 		_RotateObjectAroundAxis_001.addOutputs([new armory.logicnode.NullNode(this)]);
 	}
 }

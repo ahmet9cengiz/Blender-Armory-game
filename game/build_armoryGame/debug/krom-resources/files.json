@@ -695,44 +695,8 @@
 			],
 			"uniforms": [
 				{
-					"name": "sltcMat",
-					"type": "sampler2D"
-				},
-				{
-					"name": "lightArea0",
-					"type": "vec3"
-				},
-				{
-					"name": "lightArea1",
-					"type": "vec3"
-				},
-				{
-					"name": "lightArea2",
-					"type": "vec3"
-				},
-				{
-					"name": "lightArea3",
-					"type": "vec3"
-				},
-				{
-					"name": "sltcMag",
-					"type": "sampler2D"
-				},
-				{
-					"name": "LWVPSpot0",
-					"type": "mat4"
-				},
-				{
-					"name": "shadowMapSpot",
-					"type": "sampler2DShadow[]"
-				},
-				{
-					"name": "shadowMapPoint",
-					"type": "samplerCubeShadow[]"
-				},
-				{
-					"name": "lightProj",
-					"type": "vec2"
+					"name": "casData",
+					"type": "vec4[]"
 				},
 				{
 					"name": "shirr",
@@ -775,20 +739,20 @@
 					"type": "sampler2D"
 				},
 				{
-					"name": "pointPos",
+					"name": "sunDir",
 					"type": "vec3"
 				},
 				{
-					"name": "pointCol",
-					"type": "vec3"
+					"name": "shadowMap",
+					"type": "sampler2DShadow"
 				},
 				{
-					"name": "pointBias",
+					"name": "shadowsBias",
 					"type": "float"
 				},
 				{
-					"name": "casData",
-					"type": "vec4[]"
+					"name": "sunCol",
+					"type": "vec3"
 				}
 			],
 			"types": []

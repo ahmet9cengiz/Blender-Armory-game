@@ -5,8 +5,7 @@
 #define _Deferred
 #define _ShadowMap
 #define _CSM
-#define _LTC
-#define _SinglePoint
+#define _Sun
 #define _SMAA
 #define _SSAO
 #define _CToneFilmic
